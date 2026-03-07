@@ -1,0 +1,17 @@
+{
+  "name": "@ai-learning-os/ai",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "openai": "^4.47.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
