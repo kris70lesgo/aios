@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 :root {
+  /* shadcn CSS variables (dark theme — project is always dark) */
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+
+  /* Font */
+  --font-inter: 'Inter', sans-serif;
+
+  /* Legacy RGB vars */
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 9, 9, 11;
   --background-end-rgb: 9, 9, 11;
@@ -17,4 +30,11 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
+}
+
+.lab-bg::before {
+  overflow: hidden;
+  max-width: 100vw;
+  max-height: 100vh;
+  box-sizing: border-box;
 }

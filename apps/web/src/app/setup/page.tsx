@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { studyApi } from "@/lib/api";
 import { BookOpen, Loader2 } from "lucide-react";
+import TextareaWithFloatingLabel from "@/components/ui/textarea-with-floating-label";
+import InputWithFloatingLabel from "@/components/ui/input-with-floating-label";
 
 export default function SetupPage() {
   const [courseName, setCourseName] = useState("");
@@ -41,28 +43,24 @@ export default function SetupPage() {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Course Name
-          </label>
-          <input
+          <InputWithFloatingLabel
+            label="Course Name"
             type="text"
             value={courseName}
             onChange={(e) => setCourseName(e.target.value)}
-            placeholder="e.g. Data Structures and Algorithms"
-            className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
+            className="rounded-xl border-white/10 bg-white/5 backdrop-blur-sm text-gray-100 placeholder:text-transparent focus-visible:ring-white/20 h-12"
+            containerClassName="w-full"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Syllabus / Course Outline
-          </label>
-          <textarea
+          <TextareaWithFloatingLabel
+            label="Syllabus / Course Outline"
             value={syllabus}
             onChange={(e) => setSyllabus(e.target.value)}
-            placeholder="Paste your full syllabus, course outline, or topic list here..."
             rows={12}
-            className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600 resize-none"
+            className="resize-none rounded-xl border-white/10 bg-white/5 backdrop-blur-sm text-gray-100 placeholder:text-transparent focus-visible:ring-white/20"
+            containerClassName="w-full"
           />
         </div>
 
