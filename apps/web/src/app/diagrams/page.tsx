@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { aiApi } from "@/lib/api";
-import { Zap, Loader2 } from "lucide-react";
-import Image from "next/image";
+import { Loader2 } from "lucide-react";
+import { ShinyButton } from "@/components/ui/shiny-button";
 
 const PRESETS = [
   "A diagram showing Binary Tree traversal (inorder, preorder, postorder)",
@@ -30,7 +30,7 @@ export default function DiagramsPage() {
       const res = await aiApi.image(prompt);
       setImageUrl(res.data.result.url);
     } catch (e: any) {
-      setError(e.response?.data?.error || "Failed to generate image.");
+      setError(e.response?.data?.error || e.message || "Failed to generate image.");
     } finally {
       setLoading(false);
     }
@@ -38,11 +38,8 @@ export default function DiagramsPage() {
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-16">
-      <div className="flex items-center gap-3 mb-8">
-        <Zap className="w-7 h-7 text-orange-400" />
-        <h1 className="text-3xl font-bold">Visual Diagrams</h1>
-      </div>
-      <p className="text-gray-400 mb-6">
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">Visual Diagrams</h1>
+      <p className="text-gray-500 mb-6">
         Generate concept maps, algorithm diagrams, and visual explanations using
         FLUX.2 Max.
       </p>
@@ -53,7 +50,7 @@ export default function DiagramsPage() {
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Describe the diagram you want to generate..."
           rows={4}
-          className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-600 resize-none"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-400 text-gray-900 resize-none"
         />
 
         <div>
@@ -63,7 +60,7 @@ export default function DiagramsPage() {
               <button
                 key={p}
                 onClick={() => setPrompt(p)}
-                className="text-xs px-3 py-1.5 rounded-lg glass hover:bg-white/10 text-gray-400 transition-colors"
+                className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-500 hover:border-gray-300 transition-colors"
               >
                 {p.slice(0, 40)}…
               </button>
@@ -71,25 +68,24 @@ export default function DiagramsPage() {
           </div>
         </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
 
-        <button
+        <ShinyButton
           onClick={handleGenerate}
           disabled={loading}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-500 disabled:opacity-50 font-semibold transition-colors"
+          className="flex items-center gap-2 disabled:opacity-50"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
           {loading ? "Generating diagram..." : "Generate Diagram"}
-        </button>
+        </ShinyButton>
       </div>
 
       {imageUrl && (
-        <div className="mt-8 glass rounded-2xl overflow-hidden">
-          <Image
+        <div className="mt-8 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={imageUrl}
             alt={prompt}
-            width={1024}
-            height={1024}
             className="w-full h-auto"
           />
           <div className="p-4">
@@ -97,7 +93,7 @@ export default function DiagramsPage() {
               href={imageUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-orange-400 hover:underline"
+              className="text-sm text-gray-500 hover:text-gray-900 hover:underline transition-colors"
             >
               Open full size ↗
             </a>
@@ -107,3 +103,4 @@ export default function DiagramsPage() {
     </main>
   );
 }
+

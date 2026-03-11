@@ -10,51 +10,47 @@ import {
   SidebarBody,
   SidebarLink,
 } from "@/components/ui/sidebar";
-import {
-  BookOpen,
-  Brain,
-  Calendar,
-  BarChart3,
-  MessageSquare,
-  Zap,
-  Home,
-} from "lucide-react";
+import { Home } from "lucide-react";
+
+const NavIcon = ({ src, alt }: { src: string; alt: string }) => (
+  <img src={src} alt={alt} className="h-5 w-5 flex-shrink-0 object-contain" />
+);
 
 const links = [
   {
     label: "Home",
     href: "/",
-    icon: <Home className="text-white/60 h-5 w-5 flex-shrink-0" />,
+    icon: <Home className="text-gray-600 h-5 w-5 flex-shrink-0" />,
   },
   {
     label: "Course Setup",
     href: "/setup",
-    icon: <BookOpen className="text-blue-400 h-5 w-5 flex-shrink-0" />,
+    icon: <NavIcon src="/open-book.png" alt="Course Setup" />,
   },
   {
     label: "Quiz Generator",
     href: "/quiz",
-    icon: <Brain className="text-purple-400 h-5 w-5 flex-shrink-0" />,
+    icon: <NavIcon src="/telepathy.png" alt="Quiz Generator" />,
   },
   {
     label: "Study Planner",
     href: "/planner",
-    icon: <Calendar className="text-green-400 h-5 w-5 flex-shrink-0" />,
+    icon: <NavIcon src="/calendar.png" alt="Study Planner" />,
   },
   {
     label: "Progress",
     href: "/progress",
-    icon: <BarChart3 className="text-yellow-400 h-5 w-5 flex-shrink-0" />,
+    icon: <NavIcon src="/chart.png" alt="Progress" />,
   },
   {
     label: "AI Tutor",
     href: "/tutor",
-    icon: <MessageSquare className="text-pink-400 h-5 w-5 flex-shrink-0" />,
+    icon: <NavIcon src="/send.png" alt="AI Tutor" />,
   },
   {
     label: "Diagrams",
     href: "/diagrams",
-    icon: <Zap className="text-orange-400 h-5 w-5 flex-shrink-0" />,
+    icon: <NavIcon src="/diagram.png" alt="Diagrams" />,
   },
 ];
 
@@ -77,8 +73,8 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                   className={cn(
                     "px-2 rounded-lg transition-colors",
                     pathname === link.href
-                      ? "bg-white/[0.08] text-white"
-                      : "hover:bg-white/[0.04]"
+                    ? "bg-gray-100 text-gray-900"
+                    : "hover:bg-gray-100/70"
                   )}
                 />
               ))}
@@ -90,7 +86,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
             <div className="h-6 w-6 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex-shrink-0" />
             <motion.span
               animate={{ display: open ? "inline-block" : "none", opacity: open ? 1 : 0 }}
-              className="text-xs text-white/40 whitespace-pre"
+              className="text-xs text-gray-400 whitespace-pre"
             >
               AI Learning OS
             </motion.span>
@@ -108,11 +104,11 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
 
 const Logo = () => (
   <Link href="/" className="flex items-center gap-2 py-1 relative z-20">
-    <div className="h-5 w-6 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+    <div className="h-5 w-6 bg-gray-900 rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
     <motion.span
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="font-semibold text-white whitespace-pre text-sm"
+      className="font-semibold text-gray-900 whitespace-pre text-sm"
     >
       AI Learning OS
     </motion.span>

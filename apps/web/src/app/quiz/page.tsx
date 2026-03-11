@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { aiApi } from "@/lib/api";
-import { Brain, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import type { QuizQuestion } from "@ai-learning-os/shared";
+import { ShinyButton } from "@/components/ui/shiny-button";
 
 export default function QuizPage() {
   const [topic, setTopic] = useState("");
@@ -45,10 +46,7 @@ export default function QuizPage() {
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-16">
-      <div className="flex items-center gap-3 mb-8">
-        <Brain className="w-7 h-7 text-purple-400" />
-        <h1 className="text-3xl font-bold">Quiz Generator</h1>
-      </div>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Quiz Generator</h1>
 
       <div className="space-y-4 mb-8">
         <input
@@ -56,60 +54,60 @@ export default function QuizPage() {
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
           placeholder="Topic (e.g. Binary Trees, Recursion)"
-          className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-600"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-400 text-gray-900"
         />
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Paste your notes here (optional — improves question quality)"
           rows={5}
-          className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-600 resize-none"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-400 text-gray-900 resize-none"
         />
-        <div className="flex items-center gap-4">
-          <label className="text-sm text-gray-400">Number of questions:</label>
+        <div className="flex items-center gap-3">
+          <label className="text-sm text-gray-500">Questions:</label>
           {[3, 5, 10].map((n) => (
             <button
               key={n}
               onClick={() => setCount(n)}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                count === n ? "bg-purple-600" : "glass hover:bg-white/10"
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors border ${
+                count === n
+                  ? "bg-gray-900 text-white border-gray-900"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
               }`}
             >
               {n}
             </button>
           ))}
         </div>
-        {error && <p className="text-red-400 text-sm">{error}</p>}
-        <button
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <ShinyButton
           onClick={handleGenerate}
           disabled={loading}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-50 font-semibold transition-colors"
+          className="flex items-center gap-2 disabled:opacity-50"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
           {loading ? "Generating..." : "Generate Quiz"}
-        </button>
+        </ShinyButton>
       </div>
 
       {questions.length > 0 && (
         <div className="space-y-4">
           {questions.map((q, i) => (
-            <div key={i} className="glass rounded-2xl p-5">
-              <div className="flex items-start justify-between gap-4">
+            <div key={i} className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+              <div className="flex items-start gap-4">
                 <div className="flex-1">
-                  <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                  <span className="text-xs uppercase tracking-wider text-gray-400 font-semibold">
                     {q.type === "mcq"
                       ? "Multiple Choice"
                       : q.type === "reasoning"
                       ? "Reasoning"
                       : "Short Answer"}
                   </span>
-                  <p className="mt-1 font-medium">{q.question}</p>
+                  <p className="mt-1 font-medium text-gray-900">{q.question}</p>
                   {q.type === "mcq" && q.options && (
                     <ul className="mt-3 space-y-1">
                       {q.options.map((opt, oi) => (
-                        <li key={oi} className="text-sm text-gray-300">
-                          {opt}
-                        </li>
+                        <li key={oi} className="text-sm text-gray-600">{opt}</li>
                       ))}
                     </ul>
                   )}
@@ -117,16 +115,14 @@ export default function QuizPage() {
               </div>
               <button
                 onClick={() => toggleReveal(i)}
-                className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                className="mt-4 text-sm text-gray-500 hover:text-gray-900 transition-colors hover:underline underline-offset-2"
               >
                 {revealed.has(i) ? "Hide answer" : "Show answer"}
               </button>
               {revealed.has(i) && (
-                <div className="mt-3 pt-3 border-t border-white/10 space-y-1">
-                  <p className="text-sm text-green-400 font-medium">
-                    Answer: {q.answer}
-                  </p>
-                  <p className="text-sm text-gray-400">{q.explanation}</p>
+                <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
+                  <p className="text-sm text-gray-900 font-medium">Answer: {q.answer}</p>
+                  <p className="text-sm text-gray-500">{q.explanation}</p>
                 </div>
               )}
             </div>
@@ -136,3 +132,4 @@ export default function QuizPage() {
     </main>
   );
 }
+

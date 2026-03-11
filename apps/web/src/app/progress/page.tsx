@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { studyApi } from "@/lib/api";
-import { BarChart3, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { ShinyButton } from "@/components/ui/shiny-button";
 
 export default function ProgressPage() {
   const [courseId, setCourseId] = useState("");
@@ -29,10 +30,7 @@ export default function ProgressPage() {
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-16">
-      <div className="flex items-center gap-3 mb-8">
-        <BarChart3 className="w-7 h-7 text-yellow-400" />
-        <h1 className="text-3xl font-bold">Progress Tracker</h1>
-      </div>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Progress Tracker</h1>
 
       <div className="space-y-4 mb-8">
         <input
@@ -40,73 +38,69 @@ export default function ProgressPage() {
           value={courseId}
           onChange={(e) => setCourseId(e.target.value)}
           placeholder="Notion Course ID"
-          className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-yellow-500 placeholder-gray-600"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-400 text-gray-900"
         />
-        {error && <p className="text-red-400 text-sm">{error}</p>}
-        <button
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <ShinyButton
           onClick={handleAnalyze}
           disabled={loading}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-yellow-600 hover:bg-yellow-500 disabled:opacity-50 font-semibold transition-colors"
+          className="flex items-center gap-2 disabled:opacity-50"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
           {loading ? "Analyzing..." : "Analyze Progress"}
-        </button>
+        </ShinyButton>
       </div>
 
       {analysis && (
         <div className="space-y-5">
-          {/* Overall score */}
-          <div className="glass rounded-2xl p-6">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
             <p className="text-sm text-gray-500 mb-1">Overall Mastery</p>
-            <div className="flex items-end gap-3">
-              <span className="text-5xl font-bold text-yellow-400">
-                {analysis.overallScore}%
-              </span>
-            </div>
-            <div className="mt-3 h-2 rounded-full bg-gray-800 overflow-hidden">
+            <span className="text-5xl font-bold text-gray-900">
+              {analysis.overallScore}%
+            </span>
+            <div className="mt-3 h-2 rounded-full bg-gray-100 overflow-hidden">
               <div
-                className="h-full rounded-full bg-yellow-400 transition-all"
+                className="h-full rounded-full bg-gray-900 transition-all"
                 style={{ width: `${analysis.overallScore}%` }}
               />
             </div>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-3 text-center">
             {[
-              { label: "Mastered", value: analysis.stats.mastered, color: "text-green-400" },
-              { label: "In Progress", value: analysis.stats.inProgress, color: "text-blue-400" },
-              { label: "Needs Review", value: analysis.stats.needsReview, color: "text-red-400" },
+              { label: "Mastered", value: analysis.stats.mastered },
+              { label: "In Progress", value: analysis.stats.inProgress },
+              { label: "Needs Review", value: analysis.stats.needsReview },
             ].map((s) => (
-              <div key={s.label} className="glass rounded-xl p-4">
-                <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+              <div key={s.label} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                <p className="text-2xl font-bold text-gray-900">{s.value}</p>
                 <p className="text-xs text-gray-500 mt-1">{s.label}</p>
               </div>
             ))}
           </div>
 
-          <div className="glass rounded-2xl p-5 space-y-3">
-            <p className="text-sm text-gray-300 leading-relaxed">{analysis.assessment}</p>
-            <p className="text-sm italic text-yellow-300">{analysis.insight}</p>
+          <div className="bg-white border border-gray-200 rounded-2xl p-5 space-y-3 shadow-sm">
+            <p className="text-sm text-gray-700 leading-relaxed">{analysis.assessment}</p>
+            <p className="text-sm italic text-gray-500">{analysis.insight}</p>
           </div>
 
           {analysis.weakAreas?.length > 0 && (
-            <div className="glass rounded-2xl p-5">
-              <p className="text-sm font-semibold text-red-400 mb-2">Weak Areas to Focus On</p>
+            <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+              <p className="text-sm font-semibold text-gray-900 mb-2">Weak Areas to Focus On</p>
               <ul className="space-y-1">
                 {analysis.weakAreas.map((a: string, i: number) => (
-                  <li key={i} className="text-sm text-gray-300">• {a}</li>
+                  <li key={i} className="text-sm text-gray-600">• {a}</li>
                 ))}
               </ul>
             </div>
           )}
 
           {analysis.nextSteps?.length > 0 && (
-            <div className="glass rounded-2xl p-5">
-              <p className="text-sm font-semibold text-green-400 mb-2">Next Steps</p>
+            <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+              <p className="text-sm font-semibold text-gray-900 mb-2">Next Steps</p>
               <ul className="space-y-1">
                 {analysis.nextSteps.map((s: string, i: number) => (
-                  <li key={i} className="text-sm text-gray-300">• {s}</li>
+                  <li key={i} className="text-sm text-gray-600">• {s}</li>
                 ))}
               </ul>
             </div>
@@ -116,3 +110,4 @@ export default function ProgressPage() {
     </main>
   );
 }
+

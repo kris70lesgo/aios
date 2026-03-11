@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} bg-gray-950 text-gray-100 font-inter antialiased`}>
+    <html lang="en">
+      <body className={`${inter.variable} bg-white text-gray-900 font-inter antialiased`}>
         <ConditionalBackground />
         <AppSidebar>{children}</AppSidebar>
       </body>

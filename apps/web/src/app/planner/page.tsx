@@ -1,13 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { format } from "date-fns";
 import { studyApi } from "@/lib/api";
-import { Calendar, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { ShinyButton } from "@/components/ui/shiny-button";
 import type { StudyPlan, StudySession } from "@ai-learning-os/shared";
+import { Slider } from "@/components/ui/slider-number-flow";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export default function PlannerPage() {
   const [courseId, setCourseId] = useState("");
-  const [examDate, setExamDate] = useState("");
+  const [examDate, setExamDate] = useState<Date | undefined>(undefined);
   const [hoursPerDay, setHoursPerDay] = useState(2);
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<StudyPlan | null>(null);
@@ -21,7 +25,8 @@ export default function PlannerPage() {
     setLoading(true);
     setError("");
     try {
-      const res = await studyApi.generatePlan(courseId, examDate, hoursPerDay);
+      const examDateStr = format(examDate, "yyyy-MM-dd");
+      const res = await studyApi.generatePlan(courseId, examDateStr, hoursPerDay);
       setPlan(res.data.plan);
     } catch (e: any) {
       setError(e.response?.data?.error || "Failed to generate plan.");
@@ -32,15 +37,12 @@ export default function PlannerPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-16">
-      <div className="flex items-center gap-3 mb-8">
-        <Calendar className="w-7 h-7 text-green-400" />
-        <h1 className="text-3xl font-bold">Study Planner</h1>
-      </div>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Study Planner</h1>
 
-      <div className="glass rounded-2xl p-6 mb-8 space-y-4">
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8 space-y-6 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Notion Course ID
             </label>
             <input
@@ -48,65 +50,70 @@ export default function PlannerPage() {
               value={courseId}
               onChange={(e) => setCourseId(e.target.value)}
               placeholder="Paste your Notion course page ID"
-              className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600 text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-400 text-sm text-gray-900"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Exam Date
             </label>
-            <input
-              type="date"
-              value={examDate}
-              onChange={(e) => setExamDate(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl glass bg-transparent outline-none focus:ring-2 focus:ring-green-500 text-sm"
+            <DatePicker
+              date={examDate}
+              onDateChange={setExamDate}
+              placeholder="Pick your exam date"
+              className="w-full"
             />
           </div>
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">
-            Hours per day: {hoursPerDay}h
+          <label className="block text-sm font-medium text-gray-600 mb-6">
+            Hours per day
           </label>
-          <input
-            type="range"
-            min={1}
-            max={8}
-            value={hoursPerDay}
-            onChange={(e) => setHoursPerDay(Number(e.target.value))}
-            className="w-full accent-green-500"
-          />
+          <div className="px-2">
+            <Slider
+              min={1}
+              max={8}
+              step={1}
+              value={[hoursPerDay]}
+              onValueChange={(v) => setHoursPerDay(v[0])}
+              className="w-full"
+            />
+          </div>
         </div>
-        {error && <p className="text-red-400 text-sm">{error}</p>}
-        <button
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <ShinyButton
           onClick={handleGenerate}
           disabled={loading}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600 hover:bg-green-500 disabled:opacity-50 font-semibold transition-colors"
+          className="flex items-center gap-2 disabled:opacity-50"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
           {loading ? "Building plan..." : "Generate Study Plan"}
-        </button>
+        </ShinyButton>
       </div>
 
       {plan && (
         <div className="space-y-4">
-          <div className="flex gap-6 text-sm text-gray-400">
+          <div className="flex gap-6 text-sm text-gray-500">
             <span>
-              <span className="text-white font-semibold">{plan.daysLeft}</span> days remaining
+              <span className="text-gray-900 font-semibold">{plan.daysLeft}</span> days remaining
             </span>
             <span>
-              <span className="text-white font-semibold">{plan.hoursPerDay}h</span> per day
+              <span className="text-gray-900 font-semibold">{plan.hoursPerDay}h</span> per day
             </span>
             <span>
-              <span className="text-white font-semibold">{plan.schedule.length}</span> sessions planned
+              <span className="text-gray-900 font-semibold">{plan.schedule.length}</span> sessions planned
             </span>
           </div>
 
           {plan.recommendations?.length > 0 && (
-            <div className="glass rounded-xl p-4 text-sm">
-              <p className="text-green-400 font-semibold mb-2">AI Recommendations</p>
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm">
+              <p className="text-gray-900 font-semibold mb-2">AI Recommendations</p>
               <ul className="space-y-1">
                 {plan.recommendations.map((r, i) => (
-                  <li key={i} className="text-gray-300">
+                  <li key={i} className="text-gray-700">
                     • {r}
                   </li>
                 ))}
@@ -118,22 +125,24 @@ export default function PlannerPage() {
             {plan.schedule.map((session: StudySession) => (
               <div
                 key={session.day}
-                className={`glass rounded-xl p-4 ${session.isReview ? "border border-yellow-500/30" : ""}`}
+                className={`bg-white border rounded-xl p-4 shadow-sm ${
+                  session.isReview ? "border-gray-400" : "border-gray-200"
+                }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold text-gray-400">
+                  <span className="text-sm font-semibold text-gray-500">
                     Day {session.day} — {session.date}
                   </span>
                   {session.isReview && (
-                    <span className="text-xs text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded-full">
+                    <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
                       Review
                     </span>
                   )}
                 </div>
-                <p className="text-sm font-medium text-green-300 mb-1">
+                <p className="text-sm font-medium text-gray-900 mb-1">
                   {session.topics.join(", ")}
                 </p>
-                <p className="text-xs text-gray-500">{session.focus}</p>
+                <p className="text-xs text-gray-400">{session.focus}</p>
               </div>
             ))}
           </div>

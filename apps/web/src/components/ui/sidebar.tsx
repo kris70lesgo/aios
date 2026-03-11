@@ -87,7 +87,7 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-full px-4 py-4 hidden md:flex md:flex-col bg-black/40 backdrop-blur-xl border-r border-white/[0.06] w-[280px] flex-shrink-0",
+        "h-full px-4 py-4 hidden md:flex md:flex-col bg-white/80 backdrop-blur-xl border-r border-gray-200 w-[280px] flex-shrink-0 overflow-hidden",
         className
       )}
       animate={{
@@ -112,13 +112,13 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-12 px-4 flex flex-row md:hidden items-center justify-between bg-black/40 backdrop-blur-xl border-b border-white/[0.06] w-full"
+          "h-12 px-4 flex flex-row md:hidden items-center justify-between bg-white/80 backdrop-blur-xl border-b border-gray-200 w-full"
         )}
         {...props}
       >
         <div className="flex justify-end z-20 w-full">
           <Menu
-            className="text-white/70 cursor-pointer"
+            className="text-gray-500 cursor-pointer"
             onClick={() => setOpen(!open)}
           />
         </div>
@@ -130,12 +130,12 @@ export const MobileSidebar = ({
               exit={{ x: "-100%", opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className={cn(
-                "fixed h-full w-full inset-0 bg-gray-950 p-10 z-[100] flex flex-col justify-between",
+                "fixed h-full w-full inset-0 bg-white p-10 z-[100] flex flex-col justify-between",
                 className
               )}
             >
               <div
-                className="absolute right-10 top-10 z-50 text-white/70 cursor-pointer"
+                className="absolute right-10 top-10 z-50 text-gray-400 cursor-pointer"
                 onClick={() => setOpen(!open)}
               >
                 <X />
@@ -168,13 +168,15 @@ export const SidebarLink = ({
       )}
       {...props}
     >
-      {link.icon}
+      <span className="inline-flex flex-shrink-0 items-center justify-center h-5 w-5">
+        {link.icon}
+      </span>
       <motion.span
         animate={{
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-white/70 text-sm group-hover/sidebar:translate-x-1 group-hover/sidebar:text-white transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        className="text-gray-600 text-sm group-hover/sidebar:translate-x-1 group-hover/sidebar:text-gray-900 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
       >
         {link.label}
       </motion.span>

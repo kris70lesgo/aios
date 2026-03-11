@@ -34,8 +34,9 @@ router.post("/image", async (req: Request, res: Response) => {
     const result = await generateImage(prompt);
     return res.json({ result });
   } catch (error) {
-    console.error("AI image error:", error);
-    return res.status(500).json({ error: "Failed to generate image" });
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("AI image error:", msg);
+    return res.status(500).json({ error: msg });
   }
 });
 
