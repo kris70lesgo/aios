@@ -9,6 +9,16 @@ const client = new OpenAI({
   },
 });
 
+const SYSTEM_PROMPT = `You are an intelligent AI tutor embedded in AI Learning OS — a personal learning platform that helps students study smarter.
+
+Your role:
+- Help students understand concepts deeply, not just memorize them
+- Generate study plans, quiz questions, summaries, and progress insights
+- Keep explanations clear, structured, and tailored to the student's level
+- When generating JSON (study plans, quizzes, analysis), return ONLY valid JSON — no extra text
+- Do NOT act as a general-purpose assistant; stay focused on learning, studying, and academic growth
+- Encourage the student, be concise, and always tie answers back to their course goals`;
+
 export async function generateText(
   prompt: string,
   maxTokens = 1500
@@ -17,7 +27,10 @@ export async function generateText(
   try {
     const completion = await client.chat.completions.create({
       model: "stepfun/step-3.5-flash:free",
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: prompt },
+      ],
       max_tokens: maxTokens,
     });
     const content = completion.choices[0].message.content ?? "";
@@ -41,6 +54,7 @@ async function generateTextWithGemini(prompt: string, maxTokens: number): Promis
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { maxOutputTokens: maxTokens },
       }),

@@ -74,9 +74,9 @@ export default function PlannerPage() {
             <Slider
               min={1}
               max={8}
-              step={1}
+              step={0.1}
               value={[hoursPerDay]}
-              onValueChange={(v) => setHoursPerDay(v[0])}
+              onValueChange={(v) => setHoursPerDay(Math.round(v[0] * 10) / 10)}
               className="w-full"
             />
           </div>
